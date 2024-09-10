@@ -1,0 +1,9 @@
+services:
+  mongo:
+    image: mongo:7.0.3
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: akira
+      MONGO_INITDB_ROOT_PASSWORD: akira
+    ports:
+      - 27017:27017
