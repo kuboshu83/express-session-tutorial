@@ -3,12 +3,27 @@ import path from "path";
 import { User } from "./models/user";
 import mongoose, { ObjectId } from "mongoose";
 import session from "express-session";
+// connect-redisはtypescriptで書かれているので@typesは不要？
+import RedisStore from "connect-redis";
+import { createClient } from "redis";
 
 declare module "express-session" {
   interface SessionData {
     userId: string;
   }
 }
+
+const redisClient = createClient();
+// デフォルトでローカルのポート6379に接続しに行く
+redisClient
+  .connect()
+  .then(() => console.log("redis connection is established ..."))
+  .catch((e) => console.log(`redis connection error: ${e.message}`));
+
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "myapp",
+});
 
 const app = express();
 
@@ -17,7 +32,14 @@ app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: true }));
 // TODO: 実験で適当な秘密鍵をベタ書きしている、本番では.envに記載する。
-app.use(session({ secret: "secret" }));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: "secret",
+    store: redisStore,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send(

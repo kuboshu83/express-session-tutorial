@@ -7,3 +7,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: akira
     ports:
       - 27017:27017
+  redis:
+    image: redis:7.4.0-alpine3.20
+    ports:
+      - 6379:6379
