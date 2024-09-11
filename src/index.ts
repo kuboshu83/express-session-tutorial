@@ -20,6 +20,9 @@ function setupRoute(app: Express) {
     const user = await User.findById(userId);
     res.render("index", { user });
   });
+  app.use((req, res) => {
+    res.status(404).send("page not found ...");
+  });
 }
 
 async function main() {
