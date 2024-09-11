@@ -6,6 +6,8 @@ import session from "express-session";
 // connect-redisはtypescriptで書かれているので@typesは不要？
 import RedisStore from "connect-redis";
 import { createClient } from "redis";
+import authRouter from "./routes/auth";
+import userRouter from "./routes/user";
 
 declare module "express-session" {
   interface SessionData {
@@ -41,38 +43,15 @@ app.use(
   })
 );
 
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+
 app.get("/", (req, res) => {
   res.send(
     `todo list page ...: ${
       req.session.userId ? req.session.userId : "anonymous"
     }`
   );
-});
-
-app.post("/", async (req, res) => {
-  const { name, password } = req.body;
-  const user = new User({ name, password });
-  const result = await user.save();
-  console.log(`create user ${result.name}`);
-  res.redirect("/");
-});
-
-app.get("/new", (req, res) => {
-  res.render("auth/createUser");
-});
-
-app.get("/login", (req, res) => {
-  res.render("auth/login");
-});
-
-app.post("/login/auth", async (req, res) => {
-  const { name, password } = req.body;
-  const user = await User.findOne({ name });
-  if (!user || user.password !== password) {
-    return res.redirect("/");
-  }
-  req.session.userId = user._id.toString();
-  res.redirect("/");
 });
 
 // TODO: 実験で適当なpassとuserをベタ書きしている、本番では.envに記載する
