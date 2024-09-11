@@ -46,12 +46,10 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
-app.get("/", (req, res) => {
-  res.send(
-    `todo list page ...: ${
-      req.session.userId ? req.session.userId : "anonymous"
-    }`
-  );
+app.get("/", async (req, res) => {
+  const userId = req.session.userId;
+  const user = await User.findById(userId);
+  res.render("index", { user });
 });
 
 // TODO: 実験で適当なpassとuserをベタ書きしている、本番では.envに記載する
