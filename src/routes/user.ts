@@ -14,15 +14,19 @@ router.post("/new", async (req, res) => {
     await user.validate();
   } catch (e: any) {
     console.log(e.message);
-    return res.status(400).send(`invalid name or password`);
+    const data = { errorMessage: `invalid name or password` };
+    return res.status(400).render("auth/createuser", { ...data });
   }
 
-  let result;
+  // save()の戻り値の型が複雑なので、一旦any型で宣言しておく。
+  // any型を使用しない方法はまだ思いついていない。
+  let result: any;
   try {
     result = await user.save();
   } catch (e: any) {
     console.log(e.message);
-    return res.status(500).send(`internal server error`);
+    const data = { errorMessage: `internal server error` };
+    return res.status(500).render("auth/createuser", { ...data });
   }
   console.log(`new user ${result.name} is created`);
   req.session.userId = result._id.toString();
@@ -30,7 +34,8 @@ router.post("/new", async (req, res) => {
 });
 
 router.get("/new", (req, res) => {
-  res.render("auth/createUser");
+  const data = { errorMessage: null };
+  res.render("auth/createUser", { ...data });
 });
 
 export default router;
