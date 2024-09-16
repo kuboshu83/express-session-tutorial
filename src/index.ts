@@ -1,24 +1,23 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import path from "path";
-import { User } from "./models/user";
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import { setupSession } from "./session";
 import { setupStrage } from "./storage";
+import { checkLogin } from "./middlewares/checkLogin";
 
 function setupMiddleware(app: Express) {
   app.set("views", path.join(__dirname, "../views"));
   app.set("view engine", "ejs");
   app.use(express.urlencoded({ extended: true }));
+  app.use(checkLogin);
 }
 
 function setupRoute(app: Express) {
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
-  app.get("/", async (req, res) => {
-    const userId = req.session.userId;
-    const user = await User.findById(userId);
-    res.render("index", { user, userId });
+  app.get("/", async (req: Request, res: Response) => {
+    res.render("index", { userName: req.userName, userId: req.userId });
   });
   app.use((req, res) => {
     res.status(404).send("page not found ...");
