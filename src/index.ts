@@ -16,7 +16,7 @@ function setupMiddleware(app: Express) {
 function setupRoute(app: Express) {
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
-  app.get("/", async (req: Request, res) => {
+  app.get("/", async (req: Request, res: Response) => {
     res.render("index", { userName: req.userName, userId: req.userId });
   });
   app.use((req, res) => {
