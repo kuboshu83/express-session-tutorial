@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from "express";
 import path from "path";
-import { User } from "./models/user";
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import { setupSession } from "./session";
