@@ -18,7 +18,10 @@ function setupRoute(app: Express) {
   app.get("/", async (req, res) => {
     const userId = req.session.userId;
     const user = await User.findById(userId);
-    res.render("index", { user });
+    res.render("index", { user, userId });
+  });
+  app.use((req, res) => {
+    res.status(404).send("page not found ...");
   });
 }
 

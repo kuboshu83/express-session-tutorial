@@ -3,23 +3,30 @@ import { User } from "../models/user";
 
 const router = express.Router();
 
-// base url is /auth
-
-router.post("/", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { name, password } = req.body;
   if (!name || !password) {
-    return res.status(400).redirect("/auth/login");
+    const data = { errorMessage: "error: invalid name or password" };
+    return res.status(400).render("auth/login", { ...data });
   }
   const user = await User.findOne({ name });
   if (!user || user.password !== password) {
-    return res.status(401).redirect("/auth/login");
+    const data = { errorMessage: "error: authentication failed" };
+    return res.status(401).render("auth/login", { ...data });
   }
   req.session.userId = user._id.toString();
   res.redirect("/");
 });
 
 router.get("/login", (req, res) => {
-  res.render("auth/login");
+  const data = { errorMessage: null };
+  res.render("auth/login", { ...data });
+});
+
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
 });
 
 export default router;

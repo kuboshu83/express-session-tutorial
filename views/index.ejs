@@ -11,6 +11,9 @@
       <ul>
         <li><a href="/user/new">ユーザ作成</a></li>
         <li><a href="/auth/login">ログイン</a></li>
+        <% if (userId) { %>
+        <li><a href="/auth/logout">ログアウト</a></li>
+        <% } %>
       </ul>
     </div>
   </body>
