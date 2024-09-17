@@ -4,12 +4,6 @@ import session from "express-session";
 import RedisStore from "connect-redis";
 import { createClient } from "redis";
 
-declare module "express-session" {
-  interface SessionData {
-    userId: string;
-  }
-}
-
 export async function setupSession(app: Express): Promise<void> {
   const redisClient = createClient();
   const redisStore = new RedisStore({

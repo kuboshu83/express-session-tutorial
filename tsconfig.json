@@ -8,6 +8,6 @@
     "skipLibCheck": true,
     // typeRootsの要素を逆で書くと実行時にエラーがでる。
     // 理由はまだ調べてない。
-    "typeRoots": ["./src/@types", "./node_modules/@types"]
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   }
 }
